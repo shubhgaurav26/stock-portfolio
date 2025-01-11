@@ -1,26 +1,25 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import HoldingPage from './components/HoldingPage';
-import AddEditStockForm from './components/AddEditStockForm';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header"; // Assuming Header is in the components folder
+import Footer from "./components/Footer"; // Assuming Footer is in the components folder
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Holdings from "./pages/Holdings";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Header />
       <div className="main-content">
         <Routes>
-          <Route path="/" element={<AddEditStockForm />} />
+          <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/holding" element={<HoldingPage />} />
+          <Route path="/holdings" element={<Holdings />} />
         </Routes>
       </div>
       <Footer />
     </Router>
   );
-}
+};
 
 export default App;

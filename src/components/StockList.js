@@ -1,60 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { getAllStocks, deleteStock } from "../api/stockApi";
+import StockForm from "./StockForm";
 
-function StockList() {
+const StockList = () => {
   const [stocks, setStocks] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    // Fetch stock data from the backend
-    // For now, we'll simulate it with static data
-    setStocks([
-      { symbol: 'AAPL', name: 'Apple', quantity: 10, buyPrice: 150, currentPrice: 170 },
-      { symbol: 'GOOGL', name: 'Google', quantity: 5, buyPrice: 2000, currentPrice: 2200 },
-      // Add more stocks here
-    ]);
+    fetchStocks();
   }, []);
 
-  const handleDelete = (symbol) => {
-    // Call API to delete stock from the portfolio
-    setStocks(stocks.filter(stock => stock.symbol !== symbol));
+  const fetchStocks = async () => {
+    try {
+      const data = await getAllStocks();
+      setStocks(data);
+    } catch (error) {
+      console.error("Error fetching stocks:", error);
+    }
   };
 
-  const handleEdit = (symbol) => {
-    // Implement functionality to edit stock details (show form)
-    alert(`Editing stock: ${symbol}`);
+  const handleDelete = async (id) => {
+    try {
+      await deleteStock(id);
+      fetchStocks(); // Refresh list after delete
+    } catch (error) {
+      console.error("Error deleting stock:", error);
+    }
   };
 
   return (
-    <div className="bg-white p-4 rounded-md shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">Your Stocks</h2>
-      <table className="w-full table-auto">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Stock Name</th>
-            <th className="border px-4 py-2">Symbol</th>
-            <th className="border px-4 py-2">Quantity</th>
-            <th className="border px-4 py-2">Current Price</th>
-            <th className="border px-4 py-2">Total Value</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stocks.map(stock => (
-            <tr key={stock.symbol}>
-              <td className="border px-4 py-2">{stock.name}</td>
-              <td className="border px-4 py-2">{stock.symbol}</td>
-              <td className="border px-4 py-2">{stock.quantity}</td>
-              <td className="border px-4 py-2">${stock.currentPrice}</td>
-              <td className="border px-4 py-2">${(stock.currentPrice * stock.quantity).toFixed(2)}</td>
-              <td className="border px-4 py-2">
-                <button onClick={() => handleEdit(stock.symbol)} className="bg-yellow-500 text-white px-4 py-2 rounded-md">Edit</button>
-                <button onClick={() => handleDelete(stock.symbol)} className="bg-red-500 text-white px-4 py-2 rounded-md">Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <h2>Stock Holdings</h2>
+
+      {/* ✅ "Add Stock" Button (Ensures it is visible) */}
+      <button onClick={() => setShowForm(!showForm)} style={{ marginBottom: "10px" }}>
+        {showForm ? "Cancel" : "Add Stock"}
+      </button>
+
+      {/* Show StockForm when button is clicked */}
+      {showForm && <StockForm onStockAdded={fetchStocks} />}
+
+      <ul>
+        {stocks.map((stock) => (
+          <li key={stock.id}>
+            {stock.name} ({stock.ticker}) - {stock.quantity} @ {stock.buyPrice}
+            <button onClick={() => handleDelete(stock.id)} style={{ marginLeft: "10px", color: "red" }}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default StockList;
