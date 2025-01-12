@@ -50,45 +50,52 @@ const Holdings = () => {
   };
 
   return (
-    <div>
-      <h2>Your Holdings</h2>
+    <div className="p-6 bg-gray-900 min-h-screen text-white">
+      {/* Cool Heading */}
+      <h2 className="text-3xl font-bold text-center text-blue-400 mb-6">
+        You Can Modify Your Holdings
+      </h2>
+
       <StockForm onStockAdded={refreshStocks} isEditing={isEditing} stock={editStock} onStockUpdated={handleUpdate} />
 
-      <table className="min-w-full table-auto mt-6 bg-gray-800 text-white rounded-lg shadow-lg">
-        <thead>
-          <tr className="border-b-2 border-gray-600">
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Ticker</th>
-            <th className="px-4 py-2">Buy Price</th>
-            <th className="px-4 py-2">Quantity</th>
-            <th className="px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stocks.map((stock) => (
-            <tr key={stock.id} className="border-b border-gray-600">
-              <td className="px-4 py-2">{stock.name}</td>
-              <td className="px-4 py-2">{stock.ticker}</td>
-              <td className="px-4 py-2">{stock.buyPrice}</td>
-              <td className="px-4 py-2">{stock.quantity}</td>
-              <td className="px-4 py-2">
-                <button
-                  onClick={() => handleEdit(stock)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-md mr-2"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(stock.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-md"
-                >
-                  Delete
-                </button>
-              </td>
+      {/* Styled Table */}
+      <div className="overflow-x-auto mt-6">
+        <table className="min-w-full border border-gray-700 bg-gray-800 text-white rounded-lg shadow-lg">
+          <thead className="bg-gray-700">
+            <tr className="border-b-2 border-gray-600">
+              <th className="px-4 py-3 text-left">Name</th>
+              <th className="px-4 py-3 text-left">Ticker</th>
+              <th className="px-4 py-3 text-left">Buy Price</th>
+              <th className="px-4 py-3 text-left">Quantity</th>
+              <th className="px-4 py-3 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {stocks.map((stock) => (
+              <tr key={stock.id} className="border-b border-gray-600 hover:bg-gray-700 transition duration-200">
+                <td className="px-4 py-3">{stock.name}</td>
+                <td className="px-4 py-3">{stock.ticker}</td>
+                <td className="px-4 py-3">₹{stock.buyPrice.toFixed(2)}</td>
+                <td className="px-4 py-3">{stock.quantity}</td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => handleEdit(stock)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2 transition duration-300"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(stock.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition duration-300"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
